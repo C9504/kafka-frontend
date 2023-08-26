@@ -7,7 +7,7 @@ function App() {
   const [data, setData] = useState({});
 
   useEffect(() => {
-    const eventSource = new EventSource(`http://localhost:8085/events/projects`, { withCredentials: true });
+    const eventSource = new EventSource(`http://localhost:8084/events/projects`, { withCredentials: true });
     eventSource.onopen = (event) => {
       console.log(event.isTrusted);
     }
@@ -15,7 +15,8 @@ function App() {
       console.log('SERVER EVENT ERROR');
     }
     eventSource.onmessage = (event) => {
-      const project = JSON.parse(event.data);
+      let project = JSON.parse(event.data);
+      project = JSON.parse(project.value);
       setData(project);
       console.log(project);
     }
