@@ -7,7 +7,9 @@ function App() {
   const [data, setData] = useState({});
 
   useEffect(() => {
-    const eventSource = new EventSource(`http://localhost:8084/events/projects`, { withCredentials: true });
+    let id = window.location.pathname.replace("/", "");
+    console.log(id);
+    const eventSource = new EventSource(`http://localhost:8084/events/projects/${id}`, { withCredentials: true });
     eventSource.onopen = (event) => {
       console.log(event.isTrusted);
     }
