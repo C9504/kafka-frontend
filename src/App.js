@@ -1,10 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
 function App() {
 
   const [data, setData] = useState({});
+  const [options, setOptions] = useState({});
 
   useEffect(() => {
     let id = window.location.pathname.replace("/", "");
@@ -20,6 +23,45 @@ function App() {
       let project = JSON.parse(event.data);
       project = JSON.parse(project.value);
       setData(project);
+      setOptions({
+        plotOptions: {
+          series: {
+            borderWidth: 0,
+            colorByPoint: true,
+            type: 'pie',
+            size: '100%',
+            innerSize: '80%',
+            dataLabels: {
+              enabled: true,
+              crop: false,
+              distance: '-10%',
+              style: {
+                fontWeight: 'bold',
+                fontSize: '16px'
+              },
+              connectorWidth: 0
+            }
+          }
+        },
+        chart: {
+          type: 'pie'
+        },
+        title: {
+          text: 'Events'
+        },
+        series: [
+          {
+            type: 'pie',
+            data: [
+              { name: 'Sales', y: Math.abs(project.sales) },
+              { name: 'Customers', y: Math.abs(project.customers) },
+              { name: 'Products', y: Math.abs(project.products) },
+              { name: 'Sellers', y: Math.abs(project.sellers) },
+              { name: 'Others', y: Math.abs(project.some) }
+            ]
+          }
+        ]
+      })
       console.log(project);
     }
     return () => eventSource.close();
@@ -37,6 +79,7 @@ function App() {
                 <th>Customers</th>
                 <th>Products</th>
                 <th>Sellers</th>
+                <th>Other</th>
               </tr>
             </thead>
             <tbody>
@@ -45,10 +88,12 @@ function App() {
                 <td>{data.customers}</td>
                 <td>{data.products}</td>
                 <td>{data.sellers}</td>
+                <td>{data.some}</td>
               </tr>
             </tbody>
           </table>
         </p>
+        <HighchartsReact highcharts={Highcharts} options={options} />
         <a
           className="App-link"
           href="https://reactjs.org"
@@ -58,6 +103,7 @@ function App() {
           Learn React
         </a>
       </header>
+
     </div>
   );
 }
