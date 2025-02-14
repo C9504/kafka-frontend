@@ -1,0 +1,53 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: <PROJECT_NAME>
+  namespace: negrdo-dev
+  labels:
+    k8s-app: <PROJECT_NAME>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: <PROJECT_NAME>
+  template:
+    metadata:
+      name: <PROJECT_NAME>
+      labels:
+        k8s-app: <PROJECT_NAME>
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+        - name: <PROJECT_NAME>
+          image: <REGISTRY_URL>:<IMAGE_TAG>
+          resources:
+            limits:
+              memory: "300Mi"
+              cpu: "500m"
+            requests:
+              memory: "64Mi"
+              cpu: "200m"
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+      restartPolicy: Always
+
+---
+#Service
+kind: Service
+apiVersion: v1
+metadata:
+  name: <PROJECT_NAME>
+  namespace: negrdo-dev
+  labels:
+    k8s-app: <PROJECT_NAME>
+spec:
+  ports:
+    - name: <PROJECT_NAME>-http
+      protocol: TCP
+      port: 3000
+      targetPort: 80
+  selector:
+    k8s-app: <PROJECT_NAME>
+  type: NodePort
