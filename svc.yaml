@@ -1,0 +1,17 @@
+#Service
+kind: Service
+apiVersion: v1
+metadata:
+  name: gym-web
+  namespace: default
+  labels:
+    k8s-app: gym-web
+spec:
+  ports:
+    - name: gym-web-http
+      protocol: TCP
+      port: 3000
+      targetPort: 80
+  selector:
+    k8s-app: gym-web
+  type: NodePort
