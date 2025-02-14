@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: gym-web
-  namespace: default
+#  namespace: default
   labels:
     k8s-app: gym-web
 spec:
